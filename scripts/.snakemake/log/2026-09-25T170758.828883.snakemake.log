@@ -1,0 +1,22 @@
+Assuming unrestricted shared filesystem usage.
+
+SNAKEMAKE
+=========
+  Date: 2026-09-25 17:07:58
+  Workflow ID: 62e24841-4123-41d0-843f-7ff3534df48d
+  Platform: Linux-3.10.0-1160.76.1.el7.x86_64-x86_64-with-glibc2.17
+  Host: hekate.math.chalmers.se
+  User: alvin
+  Snakemake version: 9.26.1
+  Python version: 3.14.7 | packaged by conda-forge | (main, Sep  2 2026, 21:08:32) [GCC 15.3.0]
+  Command: /home/alvin/.conda/envs/read_QC/bin/snakemake --cores 1 P35760_101_R1_trimmed.fastq.gz
+  Snakefile: /home/alvin/HiC_project/scripts/snakefile
+  Base directory: /home/alvin/HiC_project/scripts
+  Run directory: /home/alvin/HiC_project/scripts
+  Working directory: /home/alvin/HiC_project/scripts
+  Config file(s): ['snakefile_config.yaml']
+  Config MD5: cb72b943d2d3e99666dc82e189a5b146
+
+Building DAG of jobs...
+MissingRuleException:
+No rule to produce P35760_101_R1_trimmed.fastq.gz (if you use input functions make sure that they don't raise unexpected exceptions).

@@ -1,0 +1,24 @@
+Assuming unrestricted shared filesystem usage.
+
+SNAKEMAKE
+=========
+  Date: 2026-09-25 18:16:40
+  Workflow ID: 193e3ba9-6e17-48fa-80e9-fd365039ec5a
+  Platform: Linux-3.10.0-1160.76.1.el7.x86_64-x86_64-with-glibc2.17
+  Host: hekate.math.chalmers.se
+  User: alvin
+  Snakemake version: 9.26.1
+  Python version: 3.14.7 | packaged by conda-forge | (main, Sep  2 2026, 21:08:32) [GCC 15.3.0]
+  Command: /home/alvin/.conda/envs/read_QC/bin/snakemake --cores 10 /storage/alvin/HiC_stuff/fastp_output/P35760_108_R1_trimmed.fastq.gz
+  Snakefile: /home/alvin/HiC_project/scripts/snakefile
+  Base directory: /home/alvin/HiC_project/scripts
+  Run directory: /home/alvin/HiC_project/scripts
+  Working directory: /home/alvin/HiC_project/scripts
+  Config file(s): ['snakefile_config.yaml']
+  Config MD5: f2a6cef012ecca65e64ac89d66a5d5dc
+
+Building DAG of jobs...
+LockException:
+Error: Directory cannot be locked. Please make sure that no other Snakemake process is trying to create the same files in the following directory:
+/home/alvin/HiC_project/scripts
+If you are sure that no other instances of snakemake are running on this directory, the remaining lock was likely caused by a kill signal or a power loss. It can be removed with the --unlock argument.

@@ -1,0 +1,39 @@
+Assuming unrestricted shared filesystem usage.
+
+SNAKEMAKE
+=========
+  Date: 2026-09-25 18:10:28
+  Workflow ID: 8ef5e692-6f8b-404a-a6d2-a5bf0ff74c46
+  Platform: Linux-3.10.0-1160.76.1.el7.x86_64-x86_64-with-glibc2.17
+  Host: hekate.math.chalmers.se
+  User: alvin
+  Snakemake version: 9.26.1
+  Python version: 3.14.7 | packaged by conda-forge | (main, Sep  2 2026, 21:08:32) [GCC 15.3.0]
+  Command: /home/alvin/.conda/envs/read_QC/bin/snakemake --cores 1 /storage/alvin/HiC_stuff/fastp_output/P35760_101_R1_trimmed.fastq.gz
+  Snakefile: /home/alvin/HiC_project/scripts/snakefile
+  Base directory: /home/alvin/HiC_project/scripts
+  Run directory: /home/alvin/HiC_project/scripts
+  Working directory: /home/alvin/HiC_project/scripts
+  Config file(s): ['snakefile_config.yaml']
+  Config MD5: f2a6cef012ecca65e64ac89d66a5d5dc
+
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 1 (use --cores to define parallelism)
+Rules claiming more threads will be scaled down.
+Job stats:
+job      count
+-----  -------
+fastp        1
+total        1
+
+Select jobs to execute...
+Execute 1 jobs...
+[Fri Sep 25 18:10:28 2026]
+localrule fastp:
+    input: /storage/alvin/HiC_stuff/Raw_data/Metagenomes/files/P35760_101/P35760_101_S39_L003_R1_001.fastq.gz, /storage/alvin/HiC_stuff/Raw_data/Metagenomes/files/P35760_101/P35760_101_S39_L003_R2_001.fastq.gz
+    output: /storage/alvin/HiC_stuff/fastp_output/P35760_101_R1_trimmed.fastq.gz, /storage/alvin/HiC_stuff/fastp_output/P35760_101_R2_trimmed.fastq.gz
+    jobid: 0
+    reason: Missing output files: /storage/alvin/HiC_stuff/fastp_output/P35760_101_R1_trimmed.fastq.gz
+    wildcards: sample=P35760_101
+    resources: tmpdir=/tmp

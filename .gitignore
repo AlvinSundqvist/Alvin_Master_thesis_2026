@@ -1,0 +1,5 @@
+/home/alvin/HiC_project/logs/*
+/home/alvin/HiC_project/scripts/*.html
+/home/alvin/HiC_project/scripts/*.json
+/home/alvin/HiC_project/MultiQC_output/*
+/home/alvin/HiC_project/sample_input_test_for_snakemake.txt

@@ -1,0 +1,61 @@
+import datetime
+current_date = datetime.datetime.now()
+current_date = f"{current_date.strftime("%m")}_{current_date.strftime("%d")}_{current_date.strftime("%H")}{current_date.strftime("%M")}"
+
+# We can specify a config-file to use for simplifiyng running the workflow for specific samples
+configfile: "/home/alvin/HiC_project/scripts/snakefile_config.yaml"
+
+Sequence_samples = config["samples"]
+
+TARGET_FILE="/home/alvin/HiC_project/sample_input_test_for_snakemake.txt"
+
+
+# Function to allow snakefile to handle .txt-files specifying target-files
+def read_targets(filename):
+    with open(filename) as targets:
+        return [
+            line.strip()
+            for line in targets
+            if line.strip() and not line.lstrip().startswith("#")
+            ]
+
+TARGET_SAMPLES = read_targets(TARGET_FILE)
+
+UNKNOWN_SAMPLES = set(TARGET_SAMPLES) - set(Sequence_samples)
+if UNKNOWN_SAMPLES:
+    raise ValueError(
+        "The following samples occur in targets.txt but not under 'samples:' in snakefile_config.yaml:"
+        f"{sorted(UNKNOWN_SAMPLES)}"
+    )
+
+
+# rules are specified using the "rule" command. Rules are a functional unit in snakefiles.
+rule fastp:
+    # All rules need the options "input", "output", "params" and "shell"
+    input:
+        # Here we specify what script takes our input
+        # The use of the lambda function-constructor allows us to generalize our workflow and process output for different samples by only doing the sample-lookup once the job is ran. 'lambda arguments : expression'
+        R1=lambda wildcards: (f"{Sequence_samples[wildcards.sample]}_R1_001.fastq.gz"),
+        R2=lambda wildcards: (f"{Sequence_samples[wildcards.sample]}_R2_001.fastq.gz")
+
+    output:
+        o="/storage/alvin/HiC_stuff/fastp_output/{sample}/{sample}_R1_trimmed.fastq.gz",
+        O="/storage/alvin/HiC_stuff/fastp_output/{sample}/{sample}_R2_trimmed.fastq.gz"
+
+    # Here we specify the max number of logical threads the rule is allowed to allocate to a job
+    threads: 10
+
+    # With the 'log'-option we can specify where we want our logs for the logs to be directed to
+    log:
+        '/storage/alvin/HiC_stuff/logs/fastp/{sample}'f"_{current_date}.log"
+
+    params:
+        # Here we specify what parameters we want to pass to the input
+        
+    shell:
+        # Here we specify the command that we want snakemake to run
+        # The use of triple-quotes allows us to specify multiline commands
+        """
+        mkdir /storage/alvin/HiC_stuff/fastp_output/{sample}
+        fastp --thread {threads} -i {input.R1} -I {input.R2} -o {output.o} -O {output.O} > {log} 2>&1
+        """

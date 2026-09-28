@@ -1,0 +1,3 @@
+KeyError in file "/home/alvin/HiC_project/scripts/snakefile", line 4:
+'samples'
+  File "/home/alvin/HiC_project/scripts/snakefile", line 4, in <module>

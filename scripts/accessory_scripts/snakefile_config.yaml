@@ -1,0 +1,20 @@
+samples:
+  #Metagenomic_samples
+  P35760_101: /storage/alvin/HiC_stuff/Raw_data/Metagenomes/files/P35760_101/P35760_101_S39_L003
+  P35760_102: /storage/alvin/HiC_stuff/Raw_data/Metagenomes/files/P35760_102/P35760_102_S40_L003
+  P35760_104: /storage/alvin/HiC_stuff/Raw_data/Metagenomes/files/P35760_104/P35760_104_S42_L003
+  P35760_105: /storage/alvin/HiC_stuff/Raw_data/Metagenomes/files/P35760_105/P35760_105_S43_L003
+  P35760_106: /storage/alvin/HiC_stuff/Raw_data/Metagenomes/files/P35760_106/P35760_106_S44_L003
+  P35760_107: /storage/alvin/HiC_stuff/Raw_data/Metagenomes/files/P35760_107/P35760_107_S45_L003
+  P35760_108: /storage/alvin/HiC_stuff/Raw_data/Metagenomes/files/P35760_108/P35760_108_S46_L003
+
+  #HiC_samples
+  P35759_1001: /storage/alvin/HiC_stuff/Raw_data/HiC_reads/files/P35759_1001/P35759_1001_S595_L008
+  P35759_1002: /storage/alvin/HiC_stuff/Raw_data/HiC_reads/files/P35759_1002/P35759_1002_S596_L008
+  P35759_1003: /storage/alvin/HiC_stuff/Raw_data/HiC_reads/files/P35759_1003/P35759_1003_S597_L008
+  P35759_1004: /storage/alvin/HiC_stuff/Raw_data/HiC_reads/files/P35759_1004/P35759_1004_S598_L008
+  P35759_1005: /storage/alvin/HiC_stuff/Raw_data/HiC_reads/files/P35759_1005/P35759_1005_S599_L008
+  P35759_1006: /storage/alvin/HiC_stuff/Raw_data/HiC_reads/files/P35759_1006/P35759_1006_S600_L008
+  P35759_1007: /storage/alvin/HiC_stuff/Raw_data/HiC_reads/files/P35759_1007/P35759_1007_S601_L008
+
+#target_file: /home/alvin/HiC_project/sample_input_test_for_snakemake.txt

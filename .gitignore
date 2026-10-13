@@ -1,5 +1,6 @@
-/home/alvin/HiC_project/logs/*
-/home/alvin/HiC_project/scripts/*.html
-/home/alvin/HiC_project/scripts/*.json
-/home/alvin/HiC_project/MultiQC_output/*
-/home/alvin/HiC_project/sample_input_test_for_snakemake.txt
+/home/alvin/HiC_project/logs/
+/home/alvin/HiC_project/.snakemake/
+/home/alvin/HiC_project/tool_output
+/home/alvin/HiC_project/scripts/*/sample_input_*
+/home/alvin/HiC_project/scripts/*/*.yaml
+/home/alvin/HiC_project/scripts/file_mover.sh

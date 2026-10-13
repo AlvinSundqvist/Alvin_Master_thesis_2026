@@ -1,0 +1,120 @@
+import datetime
+current_date = datetime.datetime.now()
+current_date = f"{current_date.strftime('%m_%d_%H%M')}"
+
+configfile: "/home/alvin/HiC_project/scripts/metaspades/metaspades_snakefile_config.yaml"
+TARGET_FILE=config["target_file"]
+
+sample_paths=config["sample_paths"]
+
+sample_group=config["sample_group"]
+
+def read_targets(filename):
+    with open(filename) as targets: 
+        return [
+            line.strip() # remove all whitespace at start and end of line
+            for line in targets # add all lines in text
+            if line.strip() and not line.lstrip().startswith("#") # only keep text for which the line doesn't start with '#'
+        ]
+
+TARGET_SAMPLES = read_targets(TARGET_FILE)
+
+
+# Too see whether there are any unknown samples, i.e. samples listed in 'sample_input_test_for_snakemake.txt' but not present in 'snakefile_config.yaml'
+UNKNOWN_SAMPLES = set(TARGET_SAMPLES) - set(sample_paths)
+if UNKNOWN_SAMPLES:
+    raise ValueError(
+        "The following samples occur in 'sample_input_for_metaspades_snakemake.txt' but not under 'samples:' in 'metaspades_snakefile_config.yaml':"
+        f"{sorted(UNKNOWN_SAMPLES)}"
+    )
+
+
+rule all:
+    input:
+        [f"/storage/alvin/HiC_stuff/metaspades_output/{sample}_metaspades_assembly.gfa" for sample in TARGET_SAMPLES],
+    default_target: True
+
+
+# !WORK IN PROGRESS!
+rule metaspades:
+    input:
+        R1=lambda wildcards: (f"{sample_paths[wildcards.sample]}_R1_trimmed.fastq.gz"),
+        R2=lambda wildcards: (f"{sample_paths[wildcards.sample]}_R2_trimmed.fastq.gz")
+
+    output:
+        "/storage/alvin/HiC_stuff/metaspades_output/{sample}_metaspades_assembly.gfa"
+        #"/storage/alvin/HiC_stuff/metaspades_output/{group}/{sample}/assembly_graph_with_scaffolds.gfa"
+
+    log:
+        metaspades_log=f"/home/alvin/HiC_project/logs/metaspades/{{sample}}_{current_date}.log"
+        #"/home/alvin/HiC_project/logs/metaspades/{group}"
+
+    threads: 70
+
+    params:
+        memory=400 # Number of gigabytes of memory to allocate to spades
+
+    shell:
+        """
+        set -euo pipefail
+
+        mkdir -p "$(dirname {output})" "$(dirname {log.metaspades_log})"
+
+        # "spades.py --meta -1 <file with forward paired-end reads>  -2 <file with reverse paired-end reads> -o <outdirectory>"
+        spades.py --meta --threads {threads} --memory {params.memory} -1 {input.R1} -2 {input.R2} -o $(dirname {output}) > {log.metaspades_log} 2>&1
+
+        mv "$(dirname {output})/assembly_graph_with_scaffolds.gfa" "$(dirname {output})/{wildcards.sample}_metaspades_assembly.gfa"
+
+        # Sending email to confirm that metaSPAdes has finished
+        # "echo 'mail-contents' | mail -s 'mail-subject' username@adress.domain
+        echo "A set of MAGs have now been created for sample: '{wildcards.sample}'" | mail -s "'{wildcards.sample}' - metaSPAdes MAG-construction" gusalvisu@student.gu.se
+        """
+
+
+rule ?????:
+    input:
+        #"/storage/alvin/HiC_stuff/metaspades_output/contigs.fasta"
+    
+    output:
+        #"/storage/alvin/HiC_stuff/checkm2_output/{sample}_quality_report.tsv"
+
+    log:
+
+    threads: 40
+
+    shell:
+        """
+        set -euo pipefail
+
+        mkdir -p "$(dirname {output})"
+        # "checkm2 predict --input <path/to/input> <path/to/output>"
+        checkm2 predict --threads {threads} --input {input} --output-directory {output}
+
+        # Sending email to confirm that ???? has finished
+        echo 'test' | mail -s "TEST: '{wildcards.sample}' - ??????" gusalvisu@student.gu.se
+        """
+
+# !WORK IN PROGRESS!
+rule refined_with_binspreader:
+    input:
+        graph="assembly_graph_with_scaffolds.gfa",
+        #bins="" Need a tool that does binning to have this
+
+    output:
+        ""
+
+    log:
+
+    threads: 20
+
+    shell:
+        """
+        set -euo pipefail
+
+        mkdir -p 
+
+        # "binspreader <path/to/graph> <file with bins in .tsv format>"
+        binspreader -t {threads} {input.graph} {input.bins} {output} 
+                     [--paths
+                    <contig.paths>]
+        """

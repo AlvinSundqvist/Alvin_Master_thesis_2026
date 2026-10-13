@@ -1,0 +1,68 @@
+import datetime
+current_date = datetime.datetime.now()
+current_date = f"{current_date.strftime('%m_%d_%H%M')}"
+
+configfile: "/home/alvin/HiC_project/scripts/diamond/diamond_snakefile_config.yaml"
+TARGET_FILE = config["target_file"]
+
+sample_paths = config["sample_paths"] # The paths to all samples in the dataset
+
+sample_groups = config["sample_groups"]
+
+def read_targets(filename):
+    with open(filename) as targets:
+        return [
+            line.strip()
+            for line in targets  
+            if line.strip() and not line.lstrip().startswith("#")
+        ]
+
+TARGET_SAMPLES = read_targets(TARGET_FILE) # The samples that we will be running in the coming job
+
+# Too see whether there are any unknown samples, i.e. samples listed in 'sample_input_test_for_snakemake.txt' but not present in 'snakefile_config.yaml'
+UNKNOWN_SAMPLES = set(TARGET_SAMPLES) - set(sample_paths)
+if UNKNOWN_SAMPLES:
+    raise ValueError(
+        "The following samples occur in 'sample_input_for_diamond_snakemake.txt' but not under 'samples:' in 'diamond_snakefile_config.yaml':"
+        f"{sorted(UNKNOWN_SAMPLES)}"
+    )
+
+
+
+rule all:
+    input:
+        [f"/storage/alvin/HiC_stuff/diamond_ouput/{sample_groups[sample]}/{sample}/dmnd_{sample}_R1.tsv" for sample in TARGET_SAMPLES],
+    default_target: True
+
+rule diamond_aligning:
+    input: 
+        database="/storage/shared/databases/CARD_Aug2026/protein_fasta_protein_homolog_model.dmnd",
+        R1=lambda wildcards: (f"{sample_paths[wildcards.sample]}_R1_trimmed.fastq.gz"),
+        R2=lambda wildcards: (f"{sample_paths[wildcards.sample]}_R2_trimmed.fastq.gz")
+
+    output:
+        R1="/storage/alvin/HiC_stuff/diamond_ouput/{group}/{sample}/dmnd_{sample}_R1.tsv",
+        R2="/storage/alvin/HiC_stuff/diamond_ouput/{group}/{sample}/dmnd_{sample}_R2.tsv"
+    
+    log:
+        diamond_log="/home/alvin/HiC_project/logs/diamond/{group}/{sample}"
+
+    threads: 25
+
+    shell: 
+        """
+        set -euo pipefail
+
+        mkdir -p "$(dirname {output.R1})" "$(dirname {log.diamond_log})"
+
+        echo "Now aligning '$(basename {input.R1})' to CARD-database"
+        diamond blastx --log --threads {threads} --db {input.database} --query {input.R1} --out {output.R2} > {log.diamond_log} 2&>1
+        echo "Finished aligning to database"
+
+        echo "Now aligning '$(basename {input.R2})' to CARD-database"
+        diamond blastx --log --threads {threads} --db {input.database} --query {input.R2} --out {output.R2} > {log.diamond_log} 2&>1
+        echo "Finished aligning to database"
+
+        # Sending email to confirm that DIAMOND has finished
+        echo "TEST" | mail -s "TEST: {wildcards.sample} - DIAMOND aligning to CARD-database" gusalvisu@student.gu.se
+        """
